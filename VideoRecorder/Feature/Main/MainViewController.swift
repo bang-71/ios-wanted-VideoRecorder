@@ -1,13 +1,14 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  VideoRecorder
 //
 //  Created by kjs on 2022/10/07.
 //
 
 import UIKit
+import AVFoundation
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     var dataArry : [VideoModel] = [.init(videoImage: UIImage(named: ""), videoName: "Nature.mp4"),
         .init(videoImage: UIImage(named: ""), videoName: "Food.mp4"),
                                    .init(videoImage: UIImage(named: ""), videoName: "Building.mp4"),
@@ -19,6 +20,7 @@ class ViewController: UIViewController {
                                    .init(videoImage: UIImage(named: ""), videoName: "sfsdfdshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadsf"),
                                    .init(videoImage: UIImage(named: ""), videoName: "sdfsdaddsjgasdksahjdkjsahdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadsadsdfsd"),
     ]
+    
     let navibar: UIButton = {
         let navibar = UIButton()
         navibar.image(for: .normal)
@@ -32,17 +34,49 @@ class ViewController: UIViewController {
         titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         return titleLabel
     }()
+    
+    @IBOutlet weak var naviBarList: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         naviBarList.tintColor = .black
-    
-        
+    }
+
+    @IBAction func didTapCameraButton(_ sender: UIBarButtonItem) {
+        checkAuthorization()
     }
     
-    @IBOutlet weak var naviBarList: UIBarButtonItem!
+    // 카메라 권한 확인
+    func checkAuthorization() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            self.presentCameraViewController()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    self.presentCameraViewController()
+                }
+            }
+        case .denied:
+            return
+        case .restricted:
+            return
+        @unknown default:
+            return
+        }
+    }
+    
+    // 카메라 뷰 컨트롤러로 이동
+    func presentCameraViewController() {
+        DispatchQueue.main.async {
+            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: CameraViewController.identifier) else { return }
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
+        }
+    }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataArry.count
     }
@@ -55,14 +89,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
    
-
-    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
         let deleteAction = UIContextualAction(style: .normal, title: "Delete") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             //백업된영상도 삭제해야하는코드추가해야함
             self.dataArry.remove(at: indexPath.row)
@@ -71,7 +103,4 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         deleteAction.backgroundColor = .systemRed
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-    
-    
 }
-
