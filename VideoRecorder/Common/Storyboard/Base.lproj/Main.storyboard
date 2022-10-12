@@ -159,6 +159,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="naviBarList" destination="a2E-mg-CY6" id="TgA-px-uH6"/>
+                        <outlet property="tableView" destination="dTw-Kt-nms" id="jHu-YK-d1p"/>
                         <segue destination="gd6-5l-28v" kind="custom" id="3YM-SJ-0P9"/>
                     </connections>
                 </viewController>
