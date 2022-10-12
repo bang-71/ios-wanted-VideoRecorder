@@ -11,61 +11,44 @@ import Photos
 
 class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    
+    let dateFormatter = DateFormatter()
+   
+//
     var dataArry : [VideoModel] = []
-//        .init(videoImage: UIImage(named: ""), videoName: "Nature.mp4"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "Food.mp4"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "Building.mp4"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "Concert.mp4"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "sfdsfdsfsdf"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "ddddddd"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "ddddddd"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "sfdndlsajkbdsabdjsadjsbadkjsajkdbsakbdsjkabduwqbdjx4sabdksfsdfsd"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "sfsdfdshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadsf"),
-//                                   .init(videoImage: UIImage(named: ""), videoName: "sdfsdaddsjgasdksahjdkjsahdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadshdksabdkjsadbgasdjksadsadsadsdfsd"), ]
     
-        weak var photo: UIImageView!
-        var allPhotos: PHFetchResult<PHAsset>? = nil
-        //요청하기
-        func request() {
-                PHPhotoLibrary.requestAuthorization { (status) in
-                    if status == .authorized {
-                        self.retrieveAsset()
+            weak var photo: UIImageView!
+            var allPhotos: PHFetchResult<PHAsset>? = nil
+            //요청하기
+            func request() {
+                    PHPhotoLibrary.requestAuthorization { (status) in
+                        if status == .authorized {
+                            self.retrieveAsset()
+                        }
                     }
                 }
-            }
-        //에셋에서 이미지 가져오기
-        func assetToImage(asset: PHAsset) -> UIImage {
-                var image = UIImage()
-                let manager = PHImageManager.default()
+            //에셋에서 이미지 가져오기
+            func assetToImage(asset: PHAsset) -> UIImage {
+                    var image = UIImage()
+                    let manager = PHImageManager.default()
     
-                manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: nil, resultHandler: {(result, info)->Void in
-                    image = result!
-                })
-                return image
-            }
-        func retrieveAsset() {
-                let fetchOptions = PHFetchOptions()
-            allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-                let image = assetToImage(asset: (allPhotos?.object(at: 0))!)
+                    manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: nil, resultHandler: {(result, info)->Void in
+                        image = result!
+                    })
+                    return image
+                }
+            func retrieveAsset() {
+                    let fetchOptions = PHFetchOptions()
+                allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                    let image = assetToImage(asset: (allPhotos?.object(at: 0))!)
     
-//                DispatchQueue.main.async {
-                    self.dataArry.append(.init(videoImage: image, videoName: "dd"))
-//                    self.photo.image = image
-//                }
-            }
+                    DispatchQueue.main.async {
+                        self.dataArry.append(.init(videoImage: image, videoName: "dd"))
+//                        self.photo.image = image
+                    }
+                }
     
     var fetchResult : PHFetchResult<PHAsset>!
     let imageManager : PHCachingImageManager = PHCachingImageManager()
-    func requestColltion() {
-        let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
-        guard let cameraRollCollection = cameraRoll.firstObject else {
-            return
-        }
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
-    }
     
     let navibar: UIButton = {
         let navibar = UIButton()
@@ -86,8 +69,24 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         naviBarList.tintColor = .black
-        self.request()
+        photoAurthorizationStatus()
+        retrieveAsset()
         //        self.allPhotos = PHAsset.fetchAssets(with: nil)
+    }
+    
+    func requestColltion() {
+        let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
+        guard let cameraRollCollection = cameraRoll.firstObject else {
+            return
+        }
+        let fetchOptions = PHFetchOptions()
+        //생성날짜??
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
+    }
+    
+    
+    func photoAurthorizationStatus() {
         let photo_aurthorization_status = PHPhotoLibrary.authorizationStatus()
         switch photo_aurthorization_status {
         case .authorized :
@@ -112,13 +111,9 @@ class MainViewController: UIViewController {
             })
         case .restricted:
             print("접근 제한")
-        case .limited:
-            print("dd")
-        @unknown default:
-            print("ddqq22")
+        default : break
         }
         PHPhotoLibrary.shared().register(self)
-        
     }
     
     @IBAction func didTapCameraButton(_ sender: UIBarButtonItem) {
@@ -156,39 +151,33 @@ class MainViewController: UIViewController {
 }
 //테이블뷰 설정
 extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhotoLibraryChangeObserver {
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
-        
-        guard let changes = changeInstance.changeDetails(for: fetchResult)
-        else { return }
-        fetchResult = changes.fetchResultAfterChanges
-        OperationQueue.main.addOperation {
-            self.tableView.reloadSections(IndexSet(0...0), with: .automatic)
-        }
-    }
-    
+    //테이블셀은 몇개?
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.fetchResult?.count ?? 0
     }
-    
+    //테이블셀안의 내용
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "VideoTableViewCell", for: indexPath) as? VideoTableViewCell else {return UITableViewCell()}
         
         let asset : PHAsset = fetchResult.object(at: indexPath.row)
-        imageManager.requestImage(for: asset, targetSize: CGSize(width: 600, height: 600), contentMode: .aspectFill, options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
-    
-        cell.videoName.text = asset.localIdentifier
         
-        //        cell.model = dataArry[indexPath.row]
+        imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
+        
+        cell.videoName.text = "\(asset.localIdentifier)"
+        print("에셋 이름은:\(asset.playbackStyle)")
+        //에셋 동영상 날짜 포멧
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
         
         return cell
     }
-    
+    //셀 동적높이 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
+    //스와이프로삭제버튼
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
-    
     {
         print("시스템 : \(editingStyle)")
         if editingStyle == .delete
@@ -198,7 +187,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         }
         print("시스템 : editingStyle", #function)
     }
-   func photoLibraryDidChange1(_ changeInstance: PHChange) {
+    //삭제시 테이블셀 정렬
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
         print("시스템 : ",#function)
         guard let changes = changeInstance.changeDetails(for: fetchResult)
         else { return }
@@ -208,15 +198,4 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             self.tableView.reloadSections(IndexSet(0...0), with: .automatic)
         }
     }
-    
-    
-    //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    //        let deleteAction = UIContextualAction(style: .normal, title: "Delete") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-    //            //백업된영상도 삭제해야하는코드추가해야함
-    //            self.dataArry.remove(at: indexPath.row)
-    //            tableView.reloadData()
-    //        }
-    //        deleteAction.backgroundColor = .systemRed
-    //        return UISwipeActionsConfiguration(actions: [deleteAction])
-    //    }
 }

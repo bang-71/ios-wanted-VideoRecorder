@@ -24,7 +24,7 @@ class VideoTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        videoImage.backgroundColor = .gray
+        videoImage.backgroundColor = .white
         videoImage.layer.cornerRadius = 15
     }
     
