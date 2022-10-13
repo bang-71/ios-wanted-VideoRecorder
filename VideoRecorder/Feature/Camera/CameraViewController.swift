@@ -22,10 +22,8 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var switchButton: UIButton!
     
     let captureSession = AVCaptureSession()
-    var videoInputDevice: AVCaptureDevice?
     var videoOutput: AVCaptureMovieFileOutput?
     var currentPosition: AVCaptureDevice.Position = .unspecified
-    
     var isRecording = false
     
     override func viewDidLoad() {
@@ -68,17 +66,29 @@ class CameraViewController: UIViewController {
     
     // 사용 가능한 카메라 타입 획득
     func getVideoDevice() -> AVCaptureDevice {
-        if let device = AVCaptureDevice.default(.builtInTrueDepthCamera, for: .video, position: .back) {
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: .unspecified)
+        
+        switch self.currentPosition {
+            case .unspecified, .front:
+            guard let device = discoverySession.devices.first(where: { $0.position == .back }) else {
+                fatalError("Can't use rear camera")
+            }
+            self.currentPosition = .back
             return device
-        } else if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+            
+            case .back:
+            guard let device = discoverySession.devices.first(where: { $0.position == .front }) else {
+                fatalError("Can't use front camera")
+            }
+            self.currentPosition = .front
             return device
-        } else if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-            return device
-        } else {
-            fatalError("Missing expected back camera device.")
+            
+            @unknown default:
+                fatalError("Unknown capture position.")
         }
     }
     
+    // MARK: - 버튼 탭 핸들러
     @objc func didTapButtonHandler(_ sender: UIButton) {
         switch sender {
         case closeButton:
@@ -94,7 +104,7 @@ class CameraViewController: UIViewController {
                 startRecording()
             }
         case switchButton:
-            return
+            switchVideoDevice()
         default:
             return
         }
@@ -119,6 +129,25 @@ class CameraViewController: UIViewController {
         
         self.switchButton.isEnabled = true
         self.isRecording = false
+    }
+    
+    func switchVideoDevice() {
+        
+        let videoDevice = getVideoDevice()
+        
+        self.captureSession.beginConfiguration()
+
+        guard let oldVideoInput = self.captureSession.inputs.first else { return }
+        self.captureSession.removeInput(oldVideoInput)
+        
+        guard let newVideoInput = try? AVCaptureDeviceInput(device: videoDevice),
+              self.captureSession.canAddInput(newVideoInput) else {
+            self.captureSession.addInput(oldVideoInput)
+            return
+        }
+        self.captureSession.addInput(newVideoInput)
+        
+        self.captureSession.commitConfiguration()
     }
 }
 
