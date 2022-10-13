@@ -14,7 +14,6 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var previewView: PreviewView!
     
     @IBOutlet weak var closeButton: UIButton!
-
     @IBOutlet weak var controlView: UIView!
     @IBOutlet weak var thumbnailButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
@@ -24,6 +23,8 @@ class CameraViewController: UIViewController {
     let captureSession = AVCaptureSession()
     var videoOutput: AVCaptureMovieFileOutput?
     var currentPosition: AVCaptureDevice.Position = .unspecified
+    var timer: Timer?
+    
     var isRecording = false
     
     override func viewDidLoad() {
@@ -44,6 +45,10 @@ class CameraViewController: UIViewController {
         DispatchQueue.global(qos: .background).async {
             self.captureSession.startRunning()
         }
+    }
+    
+    func setTimerLabel(minutes: String = "00", seconds: String = "00") {
+        self.timerLabel.text = "\(minutes):\(seconds)"
     }
     
     // 비디오 인풋과 아웃풋 설정
@@ -152,6 +157,22 @@ class CameraViewController: UIViewController {
 }
 
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        
+        var elapsedTime: Int = .zero
+        self.timer = Timer(timeInterval: 1, repeats: true) { _ in
+            elapsedTime += 1
+            let minutes = String(format: "%02d", elapsedTime / 60)
+            let seconds = String(format: "%02d", elapsedTime % 60)
+            self.setTimerLabel(minutes: minutes, seconds: seconds)
+        }
+        
+        
+        if let timer = self.timer {
+            RunLoop.current.add(timer, forMode: .default)
+        }
+        
+    }
     
     // 포토 앨범에 비디오 추가
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
@@ -159,7 +180,10 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
             print("Error capturing video: \(String(describing: error))")
             return
         }
-    
+        
+        self.timer?.invalidate()
+        self.setTimerLabel()
+        
         UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
     }
 }
