@@ -22,6 +22,11 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var switchButton: UIButton!
     
     let captureSession = AVCaptureSession()
+    var videoInputDevice: AVCaptureDevice?
+    var videoOutput: AVCaptureMovieFileOutput?
+    var currentPosition: AVCaptureDevice.Position = .unspecified
+    
+    var isRecording = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +38,9 @@ class CameraViewController: UIViewController {
     func setupUI() {
         self.controlView.layer.cornerRadius = 25
         
-        self.closeButton.addTarget(self, action: #selector(didTapButtonHandler(_:)), for: .touchUpInside)
+        [closeButton, thumbnailButton, recordButton, switchButton].forEach {
+            $0?.addTarget(self, action: #selector(didTapButtonHandler(_:)), for: .touchUpInside)
+        }
         
         self.previewView.videoPreviewLayer.session = self.captureSession
         DispatchQueue.global(qos: .background).async {
@@ -51,7 +58,8 @@ class CameraViewController: UIViewController {
               self.captureSession.canAddInput(videoInput) else { return }
         self.captureSession.addInput(videoInput)
         
-        let videoOutput = AVCaptureMovieFileOutput()
+        self.videoOutput = AVCaptureMovieFileOutput()
+        guard let videoOutput = self.videoOutput else { return }
         guard self.captureSession.canAddOutput(videoOutput) else { return }
         self.captureSession.addOutput(videoOutput)
         
@@ -77,9 +85,52 @@ class CameraViewController: UIViewController {
             self.dismiss(animated: true) {
                 self.captureSession.stopRunning()
             }
+        case thumbnailButton:
+            return
+        case recordButton:
+            if self.isRecording {
+                stopRecording()
+            } else {
+                startRecording()
+            }
+        case switchButton:
+            return
         default:
-            // TODO:
             return
         }
+    }
+    
+    func startRecording() {
+        guard captureSession.isRunning else { return }
+        
+        let fileName = Date().dateToFileString + ".mp4"
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        guard let fileURL = paths.first?.appendingPathComponent(fileName) else { return }
+    
+        self.videoOutput?.startRecording(to: fileURL, recordingDelegate: self)
+    
+        self.switchButton.isEnabled = false
+        self.isRecording = true
+    }
+    
+    func stopRecording() {
+        guard captureSession.isRunning else { return }
+        self.videoOutput?.stopRecording()
+        
+        self.switchButton.isEnabled = true
+        self.isRecording = false
+    }
+}
+
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+    
+    // 포토 앨범에 비디오 추가
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        guard error == nil else {
+            print("Error capturing video: \(String(describing: error))")
+            return
+        }
+    
+        UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
     }
 }

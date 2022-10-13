@@ -15,6 +15,7 @@
 		6321038428F06E7300CC1609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6321038228F06E7300CC1609 /* LaunchScreen.storyboard */; };
 		C17680B728F5575F0012D314 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17680B628F5575F0012D314 /* PreviewView.swift */; };
 		C1C7491D28F525A30009EEA4 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7491C28F525A30009EEA4 /* CameraViewController.swift */; };
+		C1E9DD1628F6B0520067896F /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E9DD1528F6B0520067896F /* Date+Extension.swift */; };
 		D3B005A228F46DD6009D520F /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B005A128F46DD6009D520F /* VideoTableViewCell.swift */; };
 		D3B005A428F47A5B009D520F /* VideoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B005A328F47A5B009D520F /* VideoModel.swift */; };
 		D3B005A628F523C7009D520F /* VideoTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B005A528F523C7009D520F /* VideoTableView.swift */; };
@@ -31,6 +32,7 @@
 		6321038528F06E7300CC1609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C17680B628F5575F0012D314 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		C1C7491C28F525A30009EEA4 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		C1E9DD1528F6B0520067896F /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		D3B005A128F46DD6009D520F /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		D3B005A328F47A5B009D520F /* VideoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoModel.swift; sourceTree = "<group>"; };
 		D3B005A528F523C7009D520F /* VideoTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableView.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		C1C7491728F524F70009EEA4 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				C1E9DD1428F6B0430067896F /* Extension */,
 				C17680B928F5719C0012D314 /* Model */,
 				C17680B528F557350012D314 /* CustomView */,
 				C1C7491828F524FC0009EEA4 /* Support File */,
@@ -160,6 +163,14 @@
 				6321037D28F06E7200CC1609 /* Main.storyboard */,
 			);
 			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		C1E9DD1428F6B0430067896F /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C1E9DD1528F6B0520067896F /* Date+Extension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		D3B005A028F46D96009D520F /* CustomTableViewCell */ = {
@@ -246,6 +257,7 @@
 				D3B005A228F46DD6009D520F /* VideoTableViewCell.swift in Sources */,
 				C17680B728F5575F0012D314 /* PreviewView.swift in Sources */,
 				6321037C28F06E7200CC1609 /* MainViewController.swift in Sources */,
+				C1E9DD1628F6B0520067896F /* Date+Extension.swift in Sources */,
 				C1C7491D28F525A30009EEA4 /* CameraViewController.swift in Sources */,
 				6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */,
 				6321037A28F06E7200CC1609 /* SceneDelegate.swift in Sources */,
@@ -395,7 +407,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MVS5FW87FX;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "VideoRecorder/Common/Support File/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -424,7 +436,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MVS5FW87FX;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "VideoRecorder/Common/Support File/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
