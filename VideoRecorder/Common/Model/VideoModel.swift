@@ -17,8 +17,10 @@ struct VideoModel {
         return f.string(from: Date())
     }
     
-    init(videoImage: UIImage?, videoName: String) {
+    init(videoImage: UIImage?, videoName: String ) {
         self.videoImage = videoImage
         self.videoName = videoName
+        
+        
     }
 }

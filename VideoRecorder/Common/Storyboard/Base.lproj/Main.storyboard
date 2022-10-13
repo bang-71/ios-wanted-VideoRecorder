@@ -108,6 +108,28 @@
                                             <outlet property="videoName" destination="sjd-rn-7l7" id="app-34-V8O"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LodingTableViewCell" id="fNX-qg-4r8" customClass="LodingTableViewCell" customModule="VideoRecorder" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="150" width="390" height="20.333333969116211"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fNX-qg-4r8" id="joN-2Y-leu">
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="20.333333969116211"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Iki-qI-ul9">
+                                                    <rect key="frame" x="160" y="0.0" width="70" height="20.333333333333332"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Iki-qI-ul9" secondAttribute="trailing" constant="160" id="3IF-j1-khN"/>
+                                                <constraint firstAttribute="bottom" secondItem="Iki-qI-ul9" secondAttribute="bottom" id="Cmp-0O-tZO"/>
+                                                <constraint firstItem="Iki-qI-ul9" firstAttribute="leading" secondItem="joN-2Y-leu" secondAttribute="leading" constant="160" id="OA4-1W-QG5"/>
+                                                <constraint firstItem="Iki-qI-ul9" firstAttribute="top" secondItem="joN-2Y-leu" secondAttribute="top" id="Ofy-zi-tJO"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="activityIndicatorView" destination="Iki-qI-ul9" id="xW5-N7-4Dh"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <sections/>
                                 <connections>
@@ -214,7 +236,7 @@
                                                         <state key="normal" image="record.circle" catalog="system"/>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZtC-eD-Z57">
-                                                        <rect key="frame" x="23.333333333333343" y="80" width="39.333333333333343" height="18"/>
+                                                        <rect key="frame" x="23.333333333333346" y="80" width="39.333333333333343" height="18"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
