@@ -16,37 +16,37 @@ class MainViewController: UIViewController {
 //
     var dataArry : [VideoModel] = []
     
-            weak var photo: UIImageView!
-            var allPhotos: PHFetchResult<PHAsset>? = nil
-            //요청하기
-            func request() {
-                    PHPhotoLibrary.requestAuthorization { (status) in
-                        if status == .authorized {
-                            self.retrieveAsset()
-                        }
-                    }
-                }
-            //에셋에서 이미지 가져오기
-            func assetToImage(asset: PHAsset) -> UIImage {
-                    var image = UIImage()
-                    let manager = PHImageManager.default()
-    
-                    manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: nil, resultHandler: {(result, info)->Void in
-                        image = result!
-                    })
-                    return image
-                }
-            func retrieveAsset() {
-                    let fetchOptions = PHFetchOptions()
-                allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-                    let image = assetToImage(asset: (allPhotos?.object(at: 0))!)
-    
-                    DispatchQueue.main.async {
-                        self.dataArry.append(.init(videoImage: image, videoName: "dd"))
-//                        self.photo.image = image
-                    }
-                }
-    
+//            weak var photo: UIImageView!
+//            var allPhotos: PHFetchResult<PHAsset>? = nil
+//            //요청하기
+//            func request() {
+//                    PHPhotoLibrary.requestAuthorization { (status) in
+//                        if status == .authorized {
+//                            self.retrieveAsset()
+//                        }
+//                    }
+//                }
+//            //에셋에서 이미지 가져오기
+//            func assetToImage(asset: PHAsset) -> UIImage {
+//                    var image = UIImage()
+//                    let manager = PHImageManager.default()
+//
+//                    manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: nil, resultHandler: {(result, info)->Void in
+//                        image = result!
+//                    })
+//                    return image
+//                }
+//            func retrieveAsset() {
+//                    let fetchOptions = PHFetchOptions()
+//                allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+//                    let image = assetToImage(asset: (allPhotos?.object(at: 0))!)
+//
+//                    DispatchQueue.main.async {
+//                        self.dataArry.append(.init(videoImage: image, videoName: "dd"))
+////                        self.photo.image = image
+//                    }
+//                }
+//
     var fetchResult : PHFetchResult<PHAsset>!
     let imageManager : PHCachingImageManager = PHCachingImageManager()
     
@@ -70,12 +70,12 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         naviBarList.tintColor = .black
         photoAurthorizationStatus()
-        retrieveAsset()
+//        retrieveAsset()
         //        self.allPhotos = PHAsset.fetchAssets(with: nil)
     }
     
     func requestColltion() {
-        let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
+        let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumVideos, options: nil)
         guard let cameraRollCollection = cameraRoll.firstObject else {
             return
         }
@@ -165,7 +165,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
         
         cell.videoName.text = "\(asset.localIdentifier)"
-        print("에셋 이름은:\(asset.playbackStyle)")
+        print("에셋 이름은:\(fetchResult[indexPath.row])")
         //에셋 동영상 날짜 포멧
         dateFormatter.dateFormat = "yyyy-MM-dd"
         cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
@@ -197,5 +197,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         {
             self.tableView.reloadSections(IndexSet(0...0), with: .automatic)
         }
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("세번째화면")
+//        let vc = ??
+        let data = fetchResult[indexPath.row]
+//        vc.pageTypeName = .view
+//        vc.measureData = data
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
