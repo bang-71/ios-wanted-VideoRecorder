@@ -125,6 +125,8 @@ class CameraViewController: UIViewController {
         self.videoOutput?.startRecording(to: fileURL, recordingDelegate: self)
     
         self.switchButton.isEnabled = false
+        self.recordButton.setImage(UIImage(systemName: "stop.circle"), for: .normal)
+        self.recordButton.tintColor = .white
         self.isRecording = true
     }
     
@@ -133,6 +135,8 @@ class CameraViewController: UIViewController {
         self.videoOutput?.stopRecording()
         
         self.switchButton.isEnabled = true
+        self.recordButton.setImage(UIImage(systemName: "record.circle"), for: .normal)
+        self.recordButton.tintColor = .systemRed
         self.isRecording = false
     }
     
