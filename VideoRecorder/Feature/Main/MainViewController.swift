@@ -137,12 +137,32 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "VideoTableViewCell", for: indexPath) as? VideoTableViewCell else {return UITableViewCell()}
             
             let asset : PHAsset = fetchResult.object(at: indexPath.row)
-            imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
+            let resource = PHAssetResource.assetResources(for: asset)
+            let filename = resource.first?.originalFilename ?? "unknown"
+           
+            // 동영상시간 변환
+            func timeString(time: TimeInterval) -> String {
+                let hour = Int(time) / 3600
+                let minute = Int(time) / 60 % 60
+                let second = Int(time) % 60
+
+                if hour == 0 && minute == 0 {
+                    return String(format: "%01i:%02i", minute, second)
+                }else if hour == 0 && minute != 0 {
+                    return String(format: "%02i:%02i", minute, second)
+                }
+                return String(format: "%01i:%02i:%02i", hour, minute, second)
+            }
             
-            cell.videoName.text = "\(asset.localIdentifier)"
+            
+            imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
+            cell.videoName.text = "\(filename)"
             //에셋 동영상 날짜 포멧
             dateFormatter.dateFormat = "yyyy-MM-dd"
             cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
+            cell.videoTime.text = "\(timeString(time: asset.duration))"
+        
+            
             return cell
         } else {
             
@@ -219,4 +239,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         })
     }
     
+}
+extension Double {
+  func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.hour, .minute, .second, .nanosecond]
+    formatter.unitsStyle = style
+    return formatter.string(from: self) ?? ""
+  }
 }
