@@ -161,6 +161,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             dateFormatter.dateFormat = "yyyy-MM-dd"
             cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
             cell.videoTime.text = "\(timeString(time: asset.duration))"
+            print(indexPath.row)
         
             
             return cell

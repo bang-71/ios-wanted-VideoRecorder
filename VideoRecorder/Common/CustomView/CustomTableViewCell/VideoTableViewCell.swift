@@ -13,14 +13,6 @@ class VideoTableViewCell: UITableViewCell {
     @IBOutlet weak var videoName: UILabel!
     @IBOutlet weak var currentDate: UILabel!
     @IBOutlet weak var videoTime: UILabel!
-    var model: VideoModel? {
-        didSet {
-            guard let model else {return}
-            videoImage.image = model.videoImage
-            videoName.text = model.videoName
-            currentDate.text = model.currentDate
-        }
-    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
