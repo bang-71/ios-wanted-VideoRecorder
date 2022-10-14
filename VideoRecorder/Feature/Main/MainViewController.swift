@@ -17,48 +17,7 @@ class MainViewController: UIViewController {
     var fetchingMore = false
     var hasNextPage = false
     var count = 6
-    var dataArry : [VideoModel] = []
-    var aessets: [PHAsset] = []
     
-                var allPhotos: PHFetchResult<PHAsset>?
-                //요청하기
-                func request() {
-                        PHPhotoLibrary.requestAuthorization { (status) in
-                            if status == .authorized {
-                                self.retrieveAsset()
-                            }
-                        }
-                    }
-                //에셋에서 이미지 가져오기
-                func assetToImage(asset: PHAsset) -> UIImage {
-                        var image = UIImage()
-                        let manager = PHImageManager.default()
-    
-                        manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFill, options: nil, resultHandler: {(result, info)->Void in
-                            image = result!
-                        })
-                        return image
-                    }
-    
-                func retrieveAsset() {
-                    
-                        let fetchOptions = PHFetchOptions()
-                    fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-                    
-                    
-                   let allPhotos = PHAsset.fetchAssets(with: .video, options: fetchOptions)
-                    
-                    for i in 0..<allPhotos.count  {
-                        let image = assetToImage(asset: (allPhotos.object(at: i)))
-                        self.dataArry.append(.init(videoImage: image, videoName: image.description))
-                                             }
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                   
-    //
-                        }
-                    }
-    //
     let navibar: UIButton = {
         let navibar = UIButton()
         navibar.image(for: .normal)
@@ -80,28 +39,20 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         naviBarList.tintColor = .black
         photoAurthorizationStatus()
-        request()
-        
-        //        self.allPhotos = PHAsset.fetchAssets(with: nil)
     }
-    
+    //PHAsset콜렉션 비디오타입만
     func requestColltion() {
         let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumVideos, options: nil)
         guard let cameraRollCollection = cameraRoll.firstObject else {
             return
         }
-        
+        //PHAsset 옵션
         let fetchOptions = PHFetchOptions()
-        
         fetchOptions.fetchLimit = 6
-        
-        //생성날짜??
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
-
     }
-    
-    
+    //PHAsset접근
     func photoAurthorizationStatus() {
         let photo_aurthorization_status = PHPhotoLibrary.authorizationStatus()
         switch photo_aurthorization_status {
@@ -170,7 +121,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    //테이블셀은 몇개?
+    //테이블셀섹션정의
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return fetchResult.count
@@ -179,29 +130,27 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         }
         return 0
     }
-    //테이블셀안의 내용
+    //테이블셀 정의
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "VideoTableViewCell", for: indexPath) as? VideoTableViewCell else {return UITableViewCell()}
-//
+            
             let asset : PHAsset = fetchResult.object(at: indexPath.row)
-
             imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
-
+            
             cell.videoName.text = "\(asset.localIdentifier)"
             //에셋 동영상 날짜 포멧
             dateFormatter.dateFormat = "yyyy-MM-dd"
             cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
-//            cell.model = dataArry[indexPath.row]
-//            cell.model?.videoImage = dataArry[indexPath.row].videoImage
+            return cell
+        } else {
             
-            return cell
-        } else { if indexPath.section == 1 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LodingTableViewCell", for: indexPath) as? LodingTableViewCell else {return UITableViewCell()}
-            cell.start()
-            return cell
-        }
+            if indexPath.section == 1 {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "LodingTableViewCell", for: indexPath) as? LodingTableViewCell else {return UITableViewCell()}
+                cell.start()
+                return cell
+            }
         }
         return UITableViewCell()
     }
@@ -210,11 +159,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         return UITableView.automaticDimension
     }
     //스와이프로삭제버튼
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
-    {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         print("시스템 : \(editingStyle)")
-        if editingStyle == .delete
-        {
+        if editingStyle == .delete {
             let asset : PHAsset = self.fetchResult[indexPath.row]
             PHPhotoLibrary.shared().performChanges({PHAssetChangeRequest.deleteAssets([asset] as NSArray)}, completionHandler: nil)
         }
@@ -226,8 +173,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         guard let changes = changeInstance.changeDetails(for: fetchResult)
         else { return }
         fetchResult = changes.fetchResultAfterChanges
-        OperationQueue.main.addOperation
-        {
+        OperationQueue.main.addOperation {
             self.tableView.reloadSections(IndexSet(0...1), with: .automatic)
         }
     }
@@ -241,52 +187,34 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         //        vc.measureData = data
         //        self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    //스크롤시 셀 밑에서 실행되게끔 할수있게해주는 함수
-    func scrollViewDidScroll(_ scrollView: UIScrollView)
-    {
+    //스크롤뷰를 생성하여 Pagination 구현
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
-        
-        if offsetY > contentHeight - scrollView.frame.height
-        {
-            if !fetchingMore
-            {
+        if offsetY > contentHeight - scrollView.frame.height {
+            if !fetchingMore {
                 count += 6
                 beginBatchFetch()
             }
         }
     }
-    // 마지막셀이 페이지 밑에 도달했을때  더해줘야할부분(여기서  더해주어야 페징완성)
+    // 마지막셀이 스크롤 마지막에 도달했을때 실행될 함수
     func beginBatchFetch() {
         print(fetchResult.count)
-        print("더해줘")
-        
+
         fetchingMore = true
         tableView.reloadSections(IndexSet(integer: 1), with: .none)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
-            //패이지당  6개?!!!
-//            let newItems = (self.fetchResult.count...self.fetchResult.count + 6).map { index in index }
-            
-            
             let cameraRoll : PHFetchResult<PHAssetCollection> = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumVideos, options: nil)
             guard let cameraRollCollection = cameraRoll.firstObject else {
                 return
             }
             let fetchOptions = PHFetchOptions()
             fetchOptions.fetchLimit = self.count
-            //생성날짜??
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
-          
-            //  a빈배열을 담아서해야하는지??
-//            self.a.append(contentsOf: newItems)
-            //원래코드
-//            self.fetchResult.append(contentsOf: newItems)
-            
             self.hasNextPage = self.fetchResult.count > 6 ? false : true
             self.fetchingMore = false
-        
             self.tableView.reloadData()
         })
     }
