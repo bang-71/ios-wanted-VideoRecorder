@@ -12,20 +12,14 @@ class VideoTableViewCell: UITableViewCell {
     @IBOutlet weak var videoImage: UIImageView!
     @IBOutlet weak var videoName: UILabel!
     @IBOutlet weak var currentDate: UILabel!
-    
-    var model: VideoModel? {
-        didSet {
-            guard let model else {return}
-            videoImage.image = model.videoImage
-            videoName.text = model.videoName
-            currentDate.text = model.currentDate
-        }
-    }
+    @IBOutlet weak var videoTime: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        videoImage.backgroundColor = .gray
+        videoImage.backgroundColor = .white
         videoImage.layer.cornerRadius = 15
+        videoTime.clipsToBounds = true
+        videoTime.layer.cornerRadius = 3
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

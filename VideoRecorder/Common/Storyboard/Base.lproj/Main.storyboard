@@ -46,7 +46,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cKG-Di-H7y">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cKG-Di-H7y">
                                                     <rect key="frame" x="15" y="15" width="105" height="70"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="cKG-Di-H7y" secondAttribute="height" multiplier="1.5:1" id="JEe-Bf-EZ0"/>
@@ -87,8 +87,17 @@
                                                         </button>
                                                     </subviews>
                                                 </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="imW-6h-JIC">
+                                                    <rect key="frame" x="22" y="59.666666666666664" width="44.333333333333329" height="20.333333333333332"/>
+                                                    <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="imW-6h-JIC" firstAttribute="leading" secondItem="cKG-Di-H7y" secondAttribute="leading" constant="7" id="6le-A5-zH1"/>
+                                                <constraint firstItem="imW-6h-JIC" firstAttribute="bottom" secondItem="cKG-Di-H7y" secondAttribute="bottom" constant="-5" id="AFk-V9-JVB"/>
                                                 <constraint firstAttribute="trailing" secondItem="6V4-Sa-DDF" secondAttribute="trailing" constant="5" id="D9a-kP-bP3"/>
                                                 <constraint firstItem="cKG-Di-H7y" firstAttribute="centerY" secondItem="y7X-4f-1Y2" secondAttribute="centerY" id="G8J-L9-lPQ"/>
                                                 <constraint firstItem="6V4-Sa-DDF" firstAttribute="top" secondItem="y7X-4f-1Y2" secondAttribute="top" constant="25" id="ODG-OR-bGb"/>
@@ -106,6 +115,29 @@
                                             <outlet property="currentDate" destination="EbP-ey-8yy" id="yIS-XM-F3h"/>
                                             <outlet property="videoImage" destination="cKG-Di-H7y" id="at6-Jf-0t3"/>
                                             <outlet property="videoName" destination="sjd-rn-7l7" id="app-34-V8O"/>
+                                            <outlet property="videoTime" destination="imW-6h-JIC" id="bAH-xj-fvl"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LodingTableViewCell" id="fNX-qg-4r8" customClass="LodingTableViewCell" customModule="VideoRecorder" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="150" width="390" height="20.333333969116211"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fNX-qg-4r8" id="joN-2Y-leu">
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="20.333333969116211"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Iki-qI-ul9">
+                                                    <rect key="frame" x="160" y="0.0" width="70" height="20.333333333333332"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Iki-qI-ul9" secondAttribute="trailing" constant="160" id="3IF-j1-khN"/>
+                                                <constraint firstAttribute="bottom" secondItem="Iki-qI-ul9" secondAttribute="bottom" id="Cmp-0O-tZO"/>
+                                                <constraint firstItem="Iki-qI-ul9" firstAttribute="leading" secondItem="joN-2Y-leu" secondAttribute="leading" constant="160" id="OA4-1W-QG5"/>
+                                                <constraint firstItem="Iki-qI-ul9" firstAttribute="top" secondItem="joN-2Y-leu" secondAttribute="top" id="Ofy-zi-tJO"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="activityIndicatorView" destination="Iki-qI-ul9" id="xW5-N7-4Dh"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -159,6 +191,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="naviBarList" destination="a2E-mg-CY6" id="TgA-px-uH6"/>
+                        <outlet property="tableView" destination="dTw-Kt-nms" id="jHu-YK-d1p"/>
                         <segue destination="gd6-5l-28v" kind="custom" id="3YM-SJ-0P9"/>
                     </connections>
                 </viewController>
@@ -289,6 +322,9 @@
         <image name="record.circle" catalog="system" width="128" height="123"/>
         <image name="video.fill.badge.plus" catalog="system" width="128" height="88"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
