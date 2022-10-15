@@ -418,6 +418,9 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "VideoRecorder/Common/Support File/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses the microphone";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app lets you edit your Photo Library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -447,6 +450,9 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "VideoRecorder/Common/Support File/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses the microphone";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app lets you edit your Photo Library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
