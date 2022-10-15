@@ -66,6 +66,11 @@ class CameraViewController: UIViewController {
         guard self.captureSession.canAddOutput(videoOutput) else { return }
         self.captureSession.addOutput(videoOutput)
         
+        guard let microphone = AVCaptureDevice.default(for: .audio) else { return }
+        guard let audioInput = try? AVCaptureDeviceInput(device: microphone),
+              self.captureSession.canAddInput(audioInput) else { return }
+        self.captureSession.addInput(audioInput)
+        
         self.captureSession.commitConfiguration()
     }
     

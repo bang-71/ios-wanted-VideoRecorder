@@ -93,11 +93,11 @@ class MainViewController: UIViewController {
     func checkAuthorization() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            self.presentCameraViewController()
+            self.checkAudioAuthorization()
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
-                    self.presentCameraViewController()
+                    self.checkAudioAuthorization()
                 }
             }
         case .denied:
@@ -106,6 +106,14 @@ class MainViewController: UIViewController {
             return
         @unknown default:
             return
+        }
+    }
+    
+    func checkAudioAuthorization() {
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            if granted {
+                self.presentCameraViewController()
+            }
         }
     }
     
