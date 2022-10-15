@@ -66,10 +66,12 @@ class MediaViewController: UIViewController {
     
     // MARK: - 슬라이더 핸들러
     @objc func didChangeSliderHandler(_ sender: UIView) {
-        let isPlaying = self.isPlaying
         self.pauseVideo()
-        self.mediaView.player?.currentItem?.seek(to: CMTime(value: CMTimeValue(self.slider.value), timescale: 1000000000, flags: CMTimeFlags(rawValue: 1), epoch: 0)) { _ in
-    
+        let sliderTime = CMTime(value: CMTimeValue(self.slider.value), timescale: 1000000000, flags: CMTimeFlags(rawValue: 1), epoch: 0)
+        self.mediaView.player?.currentItem?.seek(to: sliderTime) { _ in
+            let minutes = String(format: "%02d", Int(sliderTime.seconds) / 60)
+            let seconds = String(format: "%02d", Int(sliderTime.seconds) % 60)
+            self.elapsedLengthLabel.text = "\(minutes):\(seconds)"
         }
     }
     
