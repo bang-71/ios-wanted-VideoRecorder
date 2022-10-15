@@ -26,7 +26,7 @@ class MediaViewController: UIViewController {
     private var isPlaying: Bool = false
     private var observer: Any?
     
-    var fileURL: URL?
+    var videoModel: VideoModel? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +36,15 @@ class MediaViewController: UIViewController {
     }
     
     func setupData() {
-        guard let fileURL = self.fileURL else { return }
-        self.mediaView.player = AVPlayer(url: fileURL)
-        print(#function, fileURL)
+        guard let videoModel = self.videoModel else { return }
+        self.mediaView.player = AVPlayer(url: videoModel.fileURL)
         
         self.elapsedLengthLabel.text = "00:00"
-        //self.totalLengthLabel.text
-        
-        // TODO:
-        self.slider.maximumValue = 4
+        let time = CMTimeConvertScale(videoModel.time, timescale: 1000000000, method: .roundAwayFromZero)
+        let minutes = String(format: "%02d", Int(time.seconds) / 60)
+        let seconds = String(format: "%02d", Int(time.seconds) % 60)
+        self.totalLengthLabel.text = "\(minutes):\(seconds)"
+        self.slider.maximumValue = Float(time.value)
     }
     
     func setupUI() {
@@ -66,8 +66,10 @@ class MediaViewController: UIViewController {
     
     // MARK: - 슬라이더 핸들러
     @objc func didChangeSliderHandler(_ sender: UIView) {
-        self.mediaView.player?.currentItem?.seek(to: CMTime(value: CMTimeValue(self.slider.value), timescale: 1, flags: CMTimeFlags(rawValue: 1), epoch: 0)) { _ in
-            
+        let isPlaying = self.isPlaying
+        self.pauseVideo()
+        self.mediaView.player?.currentItem?.seek(to: CMTime(value: CMTimeValue(self.slider.value), timescale: 1000000000, flags: CMTimeFlags(rawValue: 1), epoch: 0)) { _ in
+    
         }
     }
     
@@ -105,16 +107,16 @@ class MediaViewController: UIViewController {
         
         self.observer = self.mediaView.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: .main, using: {
             [weak self] time in
-            print(#function, time)
             let eplasedTime = time.seconds
             let eplasedTimeInt = Int(eplasedTime)
             let minutes = String(format: "%02d", eplasedTimeInt / 60)
             let seconds = String(format: "%02d", eplasedTimeInt % 60)
             self?.elapsedLengthLabel.text = "\(minutes):\(seconds)"
-            self?.slider.value = Float(eplasedTime)
+            guard let currentTime = self?.mediaView.player?.currentTime().value else { return }
+            self?.slider.value = Float(currentTime)
             
             if time.timescale == 600 {
-                self?.pauseVideo()
+                self?.resetVideo()
             }
         })
     }

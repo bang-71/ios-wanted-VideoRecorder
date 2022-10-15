@@ -51,6 +51,9 @@ class MainViewController: UIViewController {
         fetchOptions.fetchLimit = 6
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
+        
+        
+        print(#function, self.fetchResult.count)
     }
     
     
@@ -224,19 +227,29 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
     // 셀선택시 동영상재생할세번째 뷰
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: MediaViewController.identifier) as? MediaViewController else { return }
         // let data = fetchResult[indexPath.row]
         
         let options: PHVideoRequestOptions = PHVideoRequestOptions()
         options.version = .original
         PHImageManager.default().requestAVAsset(forVideo: fetchResult.object(at: indexPath.row), options: options) { asset, audio, info in
             if let urlAsset = asset as? AVURLAsset {
-                vc.fileURL =  urlAsset.url
+                let fileURL = urlAsset.url
+                
+                self.pushMediaViewController(asset: asset, fileURL: fileURL)
             }
         }
-        
-        self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func pushMediaViewController(asset: AVAsset?, fileURL: URL) {
+        DispatchQueue.main.async {
+            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: MediaViewController.identifier) as? MediaViewController else { return }
+            guard let asset = asset else { return }
+            vc.videoModel = VideoModel(time: asset.duration, fileURL: fileURL)
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     //스크롤뷰를 생성하여 Pagination 구현
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y

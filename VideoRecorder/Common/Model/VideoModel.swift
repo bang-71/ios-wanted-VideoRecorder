@@ -5,17 +5,15 @@
 //  Created by so on 2022/10/11.
 //
 
-import Foundation
+import AVFoundation
 import UIKit
 
 struct VideoModel {
-    var totalLength: Int?
-    var totalLengthString: String?
-    var fileURL: URL?
+    var time: CMTime
+    var fileURL: URL
     
-    init(totalLength: Int? = nil, totalLengthString: String? = nil, fileURL: URL? = nil) {
-        self.totalLength = totalLength
-        self.totalLengthString = totalLengthString
+    init(time: CMTime, fileURL: URL) {
+        self.time = time
         self.fileURL = fileURL
     }
 }
