@@ -9,18 +9,13 @@ import Foundation
 import UIKit
 
 struct VideoModel {
-    var videoImage: UIImage?
-    var videoName: String
-    var currentDate: String{
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: Date())
-    }
+    var totalLength: Int?
+    var totalLengthString: String?
+    var fileURL: URL?
     
-    init(videoImage: UIImage?, videoName: String ) {
-        self.videoImage = videoImage
-        self.videoName = videoName
-        
-        
+    init(totalLength: Int? = nil, totalLengthString: String? = nil, fileURL: URL? = nil) {
+        self.totalLength = totalLength
+        self.totalLengthString = totalLengthString
+        self.fileURL = fileURL
     }
 }
