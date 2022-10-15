@@ -249,7 +249,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             fetchOptions.fetchLimit = self.count
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
-            self.hasNextPage = self.fetchResult.count > 6 ? false : true
+            self.hasNextPage = self.fetchResult.count > self.count ? false : true
             self.fetchingMore = false
             self.tableView.reloadData()
         })
