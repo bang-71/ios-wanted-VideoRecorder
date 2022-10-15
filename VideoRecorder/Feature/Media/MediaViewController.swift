@@ -15,7 +15,6 @@ class MediaViewController: UIViewController {
     @IBOutlet weak var mediaView: MediaView!
     @IBOutlet weak var controlView: UIView!
     
-    
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var elapsedLengthLabel: UILabel!
     @IBOutlet weak var totalLengthLabel: UILabel!

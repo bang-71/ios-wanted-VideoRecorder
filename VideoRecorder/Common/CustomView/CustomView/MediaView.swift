@@ -21,9 +21,4 @@ class MediaView: UIView {
         layer.videoGravity = .resizeAspectFill
         return layer
     }
-    
-    func startPlay() {
-        print(#function, self.playerLayer.player)
-        self.player?.play()
-    }
 }

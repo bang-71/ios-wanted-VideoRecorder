@@ -88,7 +88,7 @@
                                                     </subviews>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="imW-6h-JIC">
-                                                    <rect key="frame" x="22" y="59.666666666666664" width="44.333333333333329" height="20.333333333333332"/>
+                                                    <rect key="frame" x="22.000000000000004" y="59.666666666666664" width="44.333333333333343" height="20.333333333333336"/>
                                                     <color key="backgroundColor" systemColor="secondaryLabelColor"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -138,7 +138,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="activityIndicatorView" destination="Iki-qI-ul9" id="xW5-N7-4Dh"/>
-                                            <segue destination="gib-ai-UqX" kind="show" id="ZEX-JT-l41"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -194,6 +193,7 @@
                         <outlet property="naviBarList" destination="a2E-mg-CY6" id="TgA-px-uH6"/>
                         <outlet property="tableView" destination="dTw-Kt-nms" id="jHu-YK-d1p"/>
                         <segue destination="gd6-5l-28v" kind="custom" id="3YM-SJ-0P9"/>
+                        <segue destination="gib-ai-UqX" kind="show" id="tcF-Je-n5M"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RL7-D4-8gR" sceneMemberID="firstResponder"/>
