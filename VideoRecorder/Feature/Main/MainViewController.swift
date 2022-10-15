@@ -216,12 +216,18 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
     // 셀선택시 동영상재생할세번째 뷰
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("세번째화면")
-        //        let vc = 새번쨰뷰컨()
-        //        let data = fetchResult[indexPath.row]
-        //        vc.pageTypeName = .view
-        //        vc.measureData = data
-        //        self.navigationController?.pushViewController(vc, animated: true)
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: MediaViewController.identifier) as? MediaViewController else { return }
+        // let data = fetchResult[indexPath.row]
+        
+        let options: PHVideoRequestOptions = PHVideoRequestOptions()
+        options.version = .original
+        PHImageManager.default().requestAVAsset(forVideo: fetchResult.object(at: indexPath.row), options: options) { asset, audio, info in
+            if let urlAsset = asset as? AVURLAsset {
+                vc.fileURL =  urlAsset.url
+            }
+        }
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     //스크롤뷰를 생성하여 Pagination 구현
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

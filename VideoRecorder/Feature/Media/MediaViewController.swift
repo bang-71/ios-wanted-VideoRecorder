@@ -15,7 +15,6 @@ class MediaViewController: UIViewController {
     @IBOutlet weak var mediaView: MediaView!
     @IBOutlet weak var controlView: UIView!
     
-    
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var elapsedLengthLabel: UILabel!
     @IBOutlet weak var totalLengthLabel: UILabel!
@@ -25,7 +24,9 @@ class MediaViewController: UIViewController {
     @IBOutlet weak var shareButton: UIButton!
     
     private var isPlaying: Bool = false
-    var observer: Any?
+    private var observer: Any?
+    
+    var fileURL: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +36,9 @@ class MediaViewController: UIViewController {
     }
     
     func setupData() {
-        // TODO:
-        let fileName = "file:///var/mobile/Media/DCIM/100APPLE/IMG_0387.MP4"
-        guard let fileURL = URL(string: fileName) else { return }
+        guard let fileURL = self.fileURL else { return }
         self.mediaView.player = AVPlayer(url: fileURL)
+        print(#function, fileURL)
         
         self.elapsedLengthLabel.text = "00:00"
         //self.totalLengthLabel.text
