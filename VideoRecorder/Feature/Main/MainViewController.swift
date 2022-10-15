@@ -52,6 +52,8 @@ class MainViewController: UIViewController {
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
     }
+    
+    
     //PHAsset접근
     func photoAurthorizationStatus() {
         let photo_aurthorization_status = PHPhotoLibrary.authorizationStatus()
@@ -140,30 +142,29 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             let resource = PHAssetResource.assetResources(for: asset)
             let filename = resource.first?.originalFilename ?? "unknown"
            
-            // 동영상시간 변환
-            func timeString(time: TimeInterval) -> String {
-                let hour = Int(time) / 3600
-                let minute = Int(time) / 60 % 60
-                let second = Int(time) % 60
-
-                if hour == 0 && minute == 0 {
-                    return String(format: "%01i:%02i", minute, second)
-                }else if hour == 0 && minute != 0 {
-                    return String(format: "%02i:%02i", minute, second)
-                }
-                return String(format: "%01i:%02i:%02i", hour, minute, second)
-            }
-            
-            
+           //저화질로 보여준다
             imageManager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit , options: nil, resultHandler: {image, _ in cell.videoImage.image = image})
+            
+            //고화질로 보여준다.(isSynchronous = false 라 비동기방식)
+            cell.videoImage.image = assetToImage(asset: asset)
+                func assetToImage(asset: PHAsset) -> UIImage {
+                    var image = cell.videoImage.image
+                        let manager = PHImageManager.default()
+                        let options = PHImageRequestOptions()
+                    options.deliveryMode = .highQualityFormat
+                    options.isSynchronous = false
+                        
+                        manager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: options, resultHandler: {(result, info)->Void in
+                            image = result!
+                        })
+                    return image ?? UIImage()
+                    }
+            
             cell.videoName.text = "\(filename)"
             //에셋 동영상 날짜 포멧
             dateFormatter.dateFormat = "yyyy-MM-dd"
             cell.currentDate.text = dateFormatter.string(from: asset.creationDate ?? Date())
             cell.videoTime.text = "\(timeString(time: asset.duration))"
-            print(indexPath.row)
-        
-            
             return cell
         } else {
             
@@ -188,6 +189,20 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
         }
         print("시스템 : editingStyle", #function)
     }
+    // 동영상시간 변환
+    func timeString(time: TimeInterval) -> String {
+        let hour = Int(time) / 3600
+        let minute = Int(time) / 60 % 60
+        let second = Int(time) % 60
+
+        if hour == 0 && minute == 0 {
+            return String(format: "%01i:%02i", minute, second)
+        }else if hour == 0 && minute != 0 {
+            return String(format: "%02i:%02i", minute, second)
+        }
+        return String(format: "%01i:%02i:%02i", hour, minute, second)
+    }
+    
     //삭제시 테이블셀 정렬
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         print("시스템 : ",#function)
@@ -234,18 +249,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource,PHPhoto
             fetchOptions.fetchLimit = self.count
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             self.fetchResult = PHAsset.fetchAssets(in: cameraRollCollection, options: fetchOptions)
-            self.hasNextPage = self.fetchResult.count > 6 ? false : true
+            self.hasNextPage = self.fetchResult.count > self.count ? false : true
             self.fetchingMore = false
             self.tableView.reloadData()
         })
     }
-    
 }
-extension Double {
-  func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
-    let formatter = DateComponentsFormatter()
-    formatter.allowedUnits = [.hour, .minute, .second, .nanosecond]
-    formatter.unitsStyle = style
-    return formatter.string(from: self) ?? ""
-  }
-}
+

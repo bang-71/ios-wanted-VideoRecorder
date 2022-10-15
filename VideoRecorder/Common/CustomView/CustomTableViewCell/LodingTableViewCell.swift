@@ -22,5 +22,6 @@ class LodingTableViewCell: UITableViewCell {
     }
     func start() {
         activityIndicatorView.startAnimating()
+     
     }
 }
