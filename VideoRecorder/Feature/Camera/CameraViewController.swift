@@ -122,6 +122,7 @@ class CameraViewController: UIViewController {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         guard let fileURL = paths.first?.appendingPathComponent(fileName) else { return }
     
+        print(fileURL)
         self.videoOutput?.startRecording(to: fileURL, recordingDelegate: self)
     
         self.switchButton.isEnabled = false
