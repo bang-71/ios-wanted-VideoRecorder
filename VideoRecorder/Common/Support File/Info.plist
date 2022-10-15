@@ -7,7 +7,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>This app uses the microphone</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
